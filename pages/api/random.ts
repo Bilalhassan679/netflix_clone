@@ -28,6 +28,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import prismadb from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -37,10 +40,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await serverAuth(req, res);
 
-    const moviesCount = await prismadb?.movie?.count();
+    const moviesCount = await prisma.movie?.count();
     const randomIndex = Math.floor(Math.random() * moviesCount);
 
-    const randomMovies = await prismadb?.movie?.findMany({
+    const randomMovies = await prisma.movie?.findMany({
       take: 1,
       skip: randomIndex
     });
